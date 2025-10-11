@@ -1,0 +1,73 @@
+package com.axelor.apps.selllicenseplates2.service.impl;
+
+import com.axelor.apps.selllicenseplates2.dto.CarNumberLotCreateAndRegisterRequest;
+import com.axelor.apps.selllicenseplates2.dto.admin.UserAdminDto;
+import com.axelor.apps.selllicenseplates2.dto.admin.UserAdminUpdateDto;
+import com.axelor.apps.selllicenseplates2.mapper.UserMapper;
+import com.axelor.apps.selllicenseplates2.model.User;
+import com.axelor.apps.selllicenseplates2.repository.UserRepository;
+import com.axelor.apps.selllicenseplates2.service.RoleService;
+import com.axelor.apps.selllicenseplates2.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+    private final RoleService roleService;
+    private final PasswordEncoder encoder;
+    private final UserMapper userMapper;
+
+    @Value("${app.defaultPhoneNumber}")
+    private String DEFAULT_CHANGED_NUMBER;
+
+    @Override
+    public User createUserFromCarNumberLotRequest(CarNumberLotCreateAndRegisterRequest request) {
+        if (isEmailExists(request.getEmail())) {
+            throw new IllegalArgumentException("Пользователь с почтой: " + request.getEmail() + " уже существует");
+        }
+        User user = User.builder()
+                .email(request.getEmail())
+                .enabled(true)
+                .fullName(request.getFullName())
+                .originalPhoneNumber(request.getPhoneNumber())
+                .changedPhoneNumber(DEFAULT_CHANGED_NUMBER)
+                .role(roleService.getRoleForUser())
+                .password(encoder.encode(request.getPassword()))
+                .build();
+
+        return userRepository.save(user);
+    }
+
+    @Override
+    public List<UserAdminDto> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return userMapper.toAdminDtoList(users);
+    }
+
+    @Override
+    public UserAdminDto updateUser(Long userId, UserAdminUpdateDto userAdminUpdateDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь с ID: " + userId + " не найден"));
+
+        user.setEnabled(userAdminUpdateDto.getEnabled());
+        user.setFullName(userAdminUpdateDto.getFullName());
+        user.setChangedPhoneNumber(userAdminUpdateDto.getChangedPhoneNumber());
+        user.setOriginalPhoneNumber(userAdminUpdateDto.getOriginalPhoneNumber());
+//        user.setRole(use);
+
+        User updatedUser = userRepository.save(user);
+        return userMapper.toAdminDto(updatedUser);
+    }
+
+    private boolean isEmailExists(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
+
+}

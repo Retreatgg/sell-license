@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: create table for regions
+      author: Argen
+      changes:
+        - createTable:
+            tableName: regions
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: region_code
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: region_name
+                  type: varchar(150)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_date
+                  type: timestamp
+              - column:
+                  name: author_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_author_region_id
+                    references: users(id)
+              - column:
+                  name: manager_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_manager_region_id
+                    references: users(id)

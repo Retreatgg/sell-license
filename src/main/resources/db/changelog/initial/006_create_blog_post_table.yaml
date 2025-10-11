@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-create-block-post-table
+      author: argen
+      changes:
+        - createTable:
+            tableName: posts
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: created_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: image_url
+                  type: varchar(512)
