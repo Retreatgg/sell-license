@@ -1,7 +1,8 @@
-INSERT INTO roles(role) VALUES ('ADMIN');
+INSERT INTO roles(role) VALUES ('ADMIN'),
+                               ('USER');
 
 INSERT INTO users(full_name, original_phone_number, changed_phone_number, email, password, enabled, role_id)
-VALUES ('Admin', '', '', 'admin@admin.admin',  '', true, 1);
+VALUES ('Admin', '', '', 'admin@admin.admin',  '$2a$10$4pNf9nB.zZMyqgGDHoUxvuAIfwnp/nt3bpdXwNCsJAi70YU9uGK7q', true, 1);
 
 INSERT INTO regions
 (region_code, region_name, created_date, updated_date, author_id, manager_id)
