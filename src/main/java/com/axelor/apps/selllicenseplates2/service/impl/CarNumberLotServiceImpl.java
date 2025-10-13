@@ -34,13 +34,15 @@ public class CarNumberLotServiceImpl implements CarNumberLotService {
 
     @Value("${app.markup.percent}")
     private Integer percentMarkup;
+    @Value("${app.defaultPhoneNumber}")
+    private String changeNumber;
 
     @Override
     public void createCarNumberLots(CarNumberLotCreateRequest request) {
         CarNumberLot carNumberLot = fromRequest(request);
         User author = AuthUtils.getCurrentUser();
         carNumberLot.setAuthor(author);
-        carNumberLot.setPhoneNumber(author.getChangedPhoneNumber());
+        carNumberLot.setPhoneNumber(changeNumber);
         carNumberLotRepository.save(carNumberLot);
     }
 

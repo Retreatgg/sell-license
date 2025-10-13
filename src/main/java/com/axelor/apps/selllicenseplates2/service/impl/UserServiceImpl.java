@@ -1,6 +1,8 @@
 package com.axelor.apps.selllicenseplates2.service.impl;
 
 import com.axelor.apps.selllicenseplates2.dto.CarNumberLotCreateAndRegisterRequest;
+import com.axelor.apps.selllicenseplates2.dto.UserDto;
+import com.axelor.apps.selllicenseplates2.dto.UserRegisterRequest;
 import com.axelor.apps.selllicenseplates2.dto.admin.UserAdminDto;
 import com.axelor.apps.selllicenseplates2.dto.admin.UserAdminUpdateDto;
 import com.axelor.apps.selllicenseplates2.mapper.UserMapper;
@@ -60,10 +62,28 @@ public class UserServiceImpl implements UserService {
         user.setFullName(userAdminUpdateDto.getFullName());
         user.setChangedPhoneNumber(userAdminUpdateDto.getChangedPhoneNumber());
         user.setOriginalPhoneNumber(userAdminUpdateDto.getOriginalPhoneNumber());
-//        user.setRole(use);
 
         User updatedUser = userRepository.save(user);
         return userMapper.toAdminDto(updatedUser);
+    }
+
+    @Override
+    public UserDto register(UserRegisterRequest request) {
+        if (isEmailExists(request.getEmail())) {
+            throw new IllegalArgumentException("Пользователь с почтой: " + request.getEmail() + " уже существует");
+        }
+        User user = User.builder()
+                .email(request.getEmail())
+                .enabled(true)
+                .fullName(request.getFullName())
+                .originalPhoneNumber(request.getPhoneNumber())
+                .changedPhoneNumber(DEFAULT_CHANGED_NUMBER)
+                .role(roleService.getRoleForUser())
+                .password(encoder.encode(request.getPassword()))
+                .build();
+
+        User savedUser = userRepository.save(user);
+        return userMapper.toDto(savedUser);
     }
 
     private boolean isEmailExists(String email) {
