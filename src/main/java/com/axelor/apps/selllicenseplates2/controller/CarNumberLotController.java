@@ -29,9 +29,9 @@ public class CarNumberLotController {
 
     @GetMapping
     public ResponseEntity<List<CarNumberLotDto>> getCarNumberLots(
-            @RequestParam(required = false) Long regionId,
-            @RequestParam(required = false) Boolean identicalNumbers,
-            @RequestParam(required = false) Boolean identicalLetters,
+            @RequestParam(required = false, defaultValue = "0") Long regionId,
+            @RequestParam(required = false, defaultValue = "false") Boolean identicalNumbers,
+            @RequestParam(required = false, defaultValue = "false") Boolean identicalLetters,
             @RequestParam(required = false, defaultValue = "date_desc") String sort
     ) {
         return ResponseEntity.ok(carNumberLotService.getCarNumberLots(regionId, identicalNumbers, identicalLetters, sort));
