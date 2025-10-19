@@ -18,8 +18,8 @@ public class CarNumberLotController {
     private final CarNumberLotService carNumberLotService;
 
     @PostMapping
-    public void createCarNumberLots(@RequestBody CarNumberLotCreateRequest request) {
-        carNumberLotService.createCarNumberLots(request);
+    public ResponseEntity<CarNumberLotDto> createCarNumberLots(@RequestBody CarNumberLotCreateRequest request) {
+        return ResponseEntity.ok(carNumberLotService.createCarNumberLots(request));
     }
 
     @PostMapping("/create-and-register")
@@ -29,10 +29,10 @@ public class CarNumberLotController {
 
     @GetMapping
     public ResponseEntity<List<CarNumberLotDto>> getCarNumberLots(
-            @RequestParam(required = false, defaultValue = "0") Long regionId,
-            @RequestParam(required = false, defaultValue = "false") Boolean identicalNumbers,
-            @RequestParam(required = false, defaultValue = "false") Boolean identicalLetters,
-            @RequestParam(required = false, defaultValue = "date_desc") String sort
+            @RequestParam(required = false, defaultValue = "0", name = "regionId") Long regionId,
+            @RequestParam(required = false, defaultValue = "false", name = "identicalNumber") Boolean identicalNumbers,
+            @RequestParam(required = false, defaultValue = "false",  name = "identicalLetters") Boolean identicalLetters,
+            @RequestParam(required = false, defaultValue = "date_desc", name = "sortByDate") String sort
     ) {
         return ResponseEntity.ok(carNumberLotService.getCarNumberLots(regionId, identicalNumbers, identicalLetters, sort));
     }
@@ -41,5 +41,10 @@ public class CarNumberLotController {
     public ResponseEntity<CarNumberLotDto> getCarNumberLotById(@PathVariable(name = "id") Long id) {
         CarNumberLotDto carNumberLot = carNumberLotService.getCarNumberLotById(id);
         return ResponseEntity.ok(carNumberLot);
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<CarNumberLotDto>> getMyCarNumberLots() {
+        return ResponseEntity.ok(carNumberLotService.getMyCarNumberLots());
     }
 }

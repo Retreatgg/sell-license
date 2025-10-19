@@ -7,8 +7,9 @@ import com.axelor.apps.selllicenseplates2.dto.CarNumberLotCreateRequest;
 import java.util.List;
 
 public interface CarNumberLotService {
-    void createCarNumberLots(CarNumberLotCreateRequest request);
+    CarNumberLotDto createCarNumberLots(CarNumberLotCreateRequest request);
     void createCarNumberLotAndRegister(CarNumberLotCreateAndRegisterRequest request);
     List<CarNumberLotDto> getCarNumberLots(Long regionId, Boolean identicalNumbers, Boolean identicalLetters, String sort);
     CarNumberLotDto getCarNumberLotById(Long id);
+    List<CarNumberLotDto> getMyCarNumberLots();
 }

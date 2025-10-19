@@ -1,17 +1,21 @@
 package com.axelor.apps.selllicenseplates2.util;
 
-import com.axelor.apps.selllicenseplates2.model.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class AuthUtils {
 
-    public static User getCurrentUser() {
+    public static String getCurrentUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof User) {
-            return (User) authentication.getPrincipal();
+        log.info("Authentication Object: {}", authentication);
+        if (authentication != null) {
+           log.info("getPrincipal: {}",  authentication.getPrincipal() instanceof User);
+            return authentication.getName();
         }
         return null;
     }

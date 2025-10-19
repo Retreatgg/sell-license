@@ -14,6 +14,14 @@ public class CarNumberLotDto {
 
     private Long id;
     private String fullCarNumber;
+
+    private String firstLetter;
+    private String secondLetter;
+    private String thirdLetter;
+    private String firstDigit;
+    private String secondDigit;
+    private String thirdDigit;
+
     private String regionCode;
     private BigDecimal price;
     private String phoneNumber;

@@ -1,6 +1,7 @@
 package com.axelor.apps.selllicenseplates2.controller;
 
 import com.axelor.apps.selllicenseplates2.dto.UserDto;
+import com.axelor.apps.selllicenseplates2.dto.UserLoginRequest;
 import com.axelor.apps.selllicenseplates2.dto.UserRegisterRequest;
 import com.axelor.apps.selllicenseplates2.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +21,10 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@RequestBody UserRegisterRequest request) {
         return ResponseEntity.ok(userService.register(request));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserDto> login(@RequestBody UserLoginRequest request) {
+       return ResponseEntity.ok(userService.login(request));
     }
 }

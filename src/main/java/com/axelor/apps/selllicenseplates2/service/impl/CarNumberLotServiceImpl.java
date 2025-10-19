@@ -15,6 +15,7 @@ import com.axelor.apps.selllicenseplates2.service.UserService;
 import com.axelor.apps.selllicenseplates2.specification.CarNumberLotSpecification;
 import com.axelor.apps.selllicenseplates2.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CarNumberLotServiceImpl implements CarNumberLotService {
@@ -38,12 +40,15 @@ public class CarNumberLotServiceImpl implements CarNumberLotService {
     private String changeNumber;
 
     @Override
-    public void createCarNumberLots(CarNumberLotCreateRequest request) {
+    public CarNumberLotDto createCarNumberLots(CarNumberLotCreateRequest request) {
         CarNumberLot carNumberLot = fromRequest(request);
-        User author = AuthUtils.getCurrentUser();
+        String authorEmail = AuthUtils.getCurrentUserEmail();
+        User author = userService.findByEmail(authorEmail);
+        log.info("Creating CarNumberLot by user: {}", author);
         carNumberLot.setAuthor(author);
         carNumberLot.setPhoneNumber(changeNumber);
         carNumberLotRepository.save(carNumberLot);
+        return carNumberLotMapper.toDto(carNumberLot);
     }
 
     @Override
@@ -73,6 +78,13 @@ public class CarNumberLotServiceImpl implements CarNumberLotService {
     public CarNumberLotDto getCarNumberLotById(Long id) {
         CarNumberLot carNumberLot = findById(id);
         return carNumberLotMapper.toDto(carNumberLot);
+    }
+
+    @Override
+    public List<CarNumberLotDto> getMyCarNumberLots() {
+        String currentUserEmail = AuthUtils.getCurrentUserEmail();
+        List<CarNumberLot> carNumberLots = carNumberLotRepository.findByAuthor_Email(currentUserEmail);
+        return carNumberLotMapper.toListDto(carNumberLots);
     }
 
     private CarNumberLot findById(Long id) {

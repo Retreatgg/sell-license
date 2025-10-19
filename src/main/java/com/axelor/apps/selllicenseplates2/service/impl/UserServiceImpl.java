@@ -2,6 +2,7 @@ package com.axelor.apps.selllicenseplates2.service.impl;
 
 import com.axelor.apps.selllicenseplates2.dto.CarNumberLotCreateAndRegisterRequest;
 import com.axelor.apps.selllicenseplates2.dto.UserDto;
+import com.axelor.apps.selllicenseplates2.dto.UserLoginRequest;
 import com.axelor.apps.selllicenseplates2.dto.UserRegisterRequest;
 import com.axelor.apps.selllicenseplates2.dto.admin.UserAdminDto;
 import com.axelor.apps.selllicenseplates2.dto.admin.UserAdminUpdateDto;
@@ -84,6 +85,22 @@ public class UserServiceImpl implements UserService {
 
         User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);
+    }
+
+    @Override
+    public User findByEmail(String username) {
+        return userRepository.findByEmail(username)
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь с почтой: " + username + " не найден"));
+    }
+
+    @Override
+    public UserDto login(UserLoginRequest request) {
+        User user = findByEmail(request.getEmail());
+        if (!encoder.matches(request.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Неверный пароль");
+        }
+
+        return userMapper.toDto(user);
     }
 
     private boolean isEmailExists(String email) {
