@@ -3,6 +3,9 @@ package com.axelor.apps.selllicenseplates2.service.impl;
 import com.axelor.apps.selllicenseplates2.dto.CarNumberLotDto;
 import com.axelor.apps.selllicenseplates2.dto.CarNumberLotCreateAndRegisterRequest;
 import com.axelor.apps.selllicenseplates2.dto.CarNumberLotCreateRequest;
+import com.axelor.apps.selllicenseplates2.dto.CarNumberLotUpdateRequest;
+import com.axelor.apps.selllicenseplates2.dto.admin.CarNumberLotAdminDto;
+import com.axelor.apps.selllicenseplates2.dto.admin.CarNumberLotUpdateAdminRequest;
 import com.axelor.apps.selllicenseplates2.exception.CarNumberLotNotFoundException;
 import com.axelor.apps.selllicenseplates2.mapper.CarNumberLotMapper;
 import com.axelor.apps.selllicenseplates2.model.CarNumberLot;
@@ -85,6 +88,56 @@ public class CarNumberLotServiceImpl implements CarNumberLotService {
         String currentUserEmail = AuthUtils.getCurrentUserEmail();
         List<CarNumberLot> carNumberLots = carNumberLotRepository.findByAuthor_Email(currentUserEmail);
         return carNumberLotMapper.toListDto(carNumberLots);
+    }
+
+    @Override
+    public CarNumberLotDto updateCarNumberLot(Long id, CarNumberLotUpdateRequest request, User user) {
+        CarNumberLot existingLot = findById(id);
+        Region region = regionService.getRegionById(request.getRegionId());
+
+        if(!user.equals(existingLot.getAuthor()) && !user.getIsAdmin()) {
+            throw new IllegalArgumentException("Пользователь не является автором номерного знака с ID: " + id);
+        } else {
+            existingLot.setComment(request.getComment());
+
+            existingLot.setFirstDigit(request.getFirstDigit());
+            existingLot.setSecondDigit(request.getSecondDigit());
+            existingLot.setThirdDigit(request.getThirdDigit());
+            existingLot.setFirstLetter(request.getFirstLetter());
+            existingLot.setSecondLetter(request.getSecondLetter());
+            existingLot.setThirdLetter(request.getThirdLetter());
+
+            String fullNumber = request.getFirstLetter()
+                    + request.getFirstDigit()
+                    + request.getSecondDigit()
+                    + request.getThirdDigit()
+                    + request.getSecondLetter()
+                    + request.getThirdLetter();
+
+            if (!isNumberUnique(fullNumber, request.getRegionId())) {
+                throw new IllegalArgumentException("Номерной знак: " + fullNumber + " в регионе: " + region.getRegionCode() + " уже существует");
+            }
+
+            existingLot.setRegion(region);
+
+            existingLot.setUpdatedDate(Instant.now());
+            carNumberLotRepository.save(existingLot);
+            return carNumberLotMapper.toDto(existingLot);
+        }
+    }
+
+    @Override
+    public List<CarNumberLotAdminDto> getCarNumberLotsAdminData() {
+        List<CarNumberLot> carNumberLots = carNumberLotRepository.findAll();
+        return carNumberLotMapper.toAdminDtoList(carNumberLots);
+    }
+
+    @Override
+    public CarNumberLotAdminDto updateCarNumberLotAdmin(Long lotId, CarNumberLotUpdateAdminRequest request) {
+//        CarNumberLot existingLot = findById(lotId);
+//
+//        carNumberLotRepository.save(existingLot);
+        return null;
     }
 
     private CarNumberLot findById(Long id) {

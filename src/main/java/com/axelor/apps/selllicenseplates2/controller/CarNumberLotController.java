@@ -3,9 +3,12 @@ package com.axelor.apps.selllicenseplates2.controller;
 import com.axelor.apps.selllicenseplates2.dto.CarNumberLotCreateAndRegisterRequest;
 import com.axelor.apps.selllicenseplates2.dto.CarNumberLotCreateRequest;
 import com.axelor.apps.selllicenseplates2.dto.CarNumberLotDto;
+import com.axelor.apps.selllicenseplates2.dto.CarNumberLotUpdateRequest;
+import com.axelor.apps.selllicenseplates2.model.User;
 import com.axelor.apps.selllicenseplates2.service.CarNumberLotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,5 +49,14 @@ public class CarNumberLotController {
     @GetMapping("/my")
     public ResponseEntity<List<CarNumberLotDto>> getMyCarNumberLots() {
         return ResponseEntity.ok(carNumberLotService.getMyCarNumberLots());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CarNumberLotDto> updateCarNumberLot(
+            @PathVariable Long id,
+            @RequestBody CarNumberLotUpdateRequest request,
+            @AuthenticationPrincipal User user) {
+        CarNumberLotDto updatedCarNumberLot = carNumberLotService.updateCarNumberLot(id, request, user);
+        return ResponseEntity.ok(updatedCarNumberLot);
     }
 }

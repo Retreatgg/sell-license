@@ -1,5 +1,7 @@
 package com.axelor.apps.selllicenseplates2.controller;
 
+import com.axelor.apps.selllicenseplates2.dto.admin.CarNumberLotAdminDto;
+import com.axelor.apps.selllicenseplates2.dto.admin.CarNumberLotUpdateAdminRequest;
 import com.axelor.apps.selllicenseplates2.dto.admin.UserAdminDto;
 import com.axelor.apps.selllicenseplates2.dto.admin.UserAdminUpdateDto;
 import com.axelor.apps.selllicenseplates2.service.AdminService;
@@ -27,6 +29,18 @@ public class AdminController {
     @PatchMapping("/users/{userId}")
     public ResponseEntity<UserAdminDto> updateUser(@PathVariable Long userId, @RequestBody UserAdminUpdateDto userAdminUpdateDto) {
         return ResponseEntity.ok(adminService.updateUser(userId, userAdminUpdateDto));
+    }
+
+    @GetMapping("/car-number-lots")
+    public ResponseEntity<List<CarNumberLotAdminDto>> getCarNumberLotsAdminData() {
+        List<CarNumberLotAdminDto> carNumberLotAdminDto = adminService.getCarNumberLotsAdminData();
+        return ResponseEntity.ok(carNumberLotAdminDto);
+    }
+
+    @PutMapping("/car-number-lots/{lotId}")
+    public ResponseEntity<CarNumberLotAdminDto> updateCarNumberLot(@PathVariable Long lotId, @RequestBody CarNumberLotUpdateAdminRequest request) {
+        CarNumberLotAdminDto updatedLot = adminService.updateCarNumberLot(lotId, request);
+        return ResponseEntity.ok(updatedLot);
     }
 
 }

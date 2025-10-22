@@ -48,4 +48,26 @@ public class PostServiceImpl implements PostService {
         Post savedPost = postRepository.save(post);
         return postMapper.toDto(savedPost);
     }
+
+    @Override
+    public void deletePost(Long postId) {
+        postRepository.deleteById(postId);
+    }
+
+    @Override
+    public PostDto updatePost(Long postId, PostCreateRequest request) {
+        Post post = postRepository.findById(postId).orElseThrow();
+
+        post.setTitle(request.getTitle());
+        post.setDescription(request.getDescription());
+        post.setUpdatedDate(Instant.now());
+
+        if (request.getImage() != null && !request.getImage().isEmpty()) {
+            String filePath = fileUtils.saveUploadedFile(request.getImage(), "/images");
+            post.setImageUrl(filePath);
+        }
+
+        Post updatedPost = postRepository.save(post);
+        return postMapper.toDto(updatedPost);
+    }
 }

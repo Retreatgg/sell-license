@@ -28,7 +28,9 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/posts/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/car-number-lots").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/car-number-lots/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session

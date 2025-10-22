@@ -1,6 +1,7 @@
 package com.axelor.apps.selllicenseplates2.mapper;
 
 import com.axelor.apps.selllicenseplates2.dto.CarNumberLotDto;
+import com.axelor.apps.selllicenseplates2.dto.admin.CarNumberLotAdminDto;
 import com.axelor.apps.selllicenseplates2.model.CarNumberLot;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,4 +18,6 @@ public interface CarNumberLotMapper {
     CarNumberLotDto toDto(CarNumberLot carNumberLot);
 
     List<CarNumberLotDto> toListDto(List<CarNumberLot> carNumberLots);
+    List<CarNumberLotAdminDto> toAdminDtoList(List<CarNumberLot> carNumberLots);
+
 }

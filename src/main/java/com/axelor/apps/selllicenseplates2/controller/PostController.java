@@ -33,4 +33,16 @@ public class PostController {
         PostDto createdPost = postService.createPost(request);
         return ResponseEntity.ok(createdPost);
     }
+
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
+        postService.deletePost(postId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{postId}")
+    public ResponseEntity<PostDto> updatePost(@PathVariable Long postId, @ModelAttribute PostCreateRequest request) {
+        PostDto updatedPost = postService.updatePost(postId, request);
+        return ResponseEntity.ok(updatedPost);
+    }
 }

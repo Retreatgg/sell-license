@@ -42,4 +42,7 @@ public class User {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
+    public boolean getIsAdmin() {
+        return this.role != null && "ADMIN".equalsIgnoreCase(this.role.getRole());
+    }
 }
