@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009-add-is-confirm-car-number-lots
+      author: argen
+      changes:
+        - addColumn:
+            tableName: car_number_lots
+            columns:
+              - column:
+                  name: is_confirm
+                  type: boolean
+                  defaultValueBoolean: false

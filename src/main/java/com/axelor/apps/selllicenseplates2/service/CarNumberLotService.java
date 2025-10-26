@@ -19,4 +19,6 @@ public interface CarNumberLotService {
     CarNumberLotDto updateCarNumberLot(Long id, CarNumberLotUpdateRequest request, User user);
     List<CarNumberLotAdminDto> getCarNumberLotsAdminData();
     CarNumberLotAdminDto updateCarNumberLotAdmin(Long lotId, CarNumberLotUpdateAdminRequest request);
+    void deleteCarNumberLot(Long id);
+    CarNumberLotAdminDto confirmCarNumberLot(Long lotId);
 }

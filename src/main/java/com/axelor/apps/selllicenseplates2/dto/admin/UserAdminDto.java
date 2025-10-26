@@ -17,7 +17,6 @@ public class UserAdminDto {
     private String originalPhoneNumber;
     private String changedPhoneNumber;
     private String email;
-    private Boolean enabled;
     private List<Role> roles;
 
 }

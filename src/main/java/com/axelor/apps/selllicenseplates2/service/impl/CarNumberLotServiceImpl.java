@@ -17,6 +17,7 @@ import com.axelor.apps.selllicenseplates2.service.RegionService;
 import com.axelor.apps.selllicenseplates2.service.UserService;
 import com.axelor.apps.selllicenseplates2.specification.CarNumberLotSpecification;
 import com.axelor.apps.selllicenseplates2.util.AuthUtils;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,6 +55,7 @@ public class CarNumberLotServiceImpl implements CarNumberLotService {
         return carNumberLotMapper.toDto(carNumberLot);
     }
 
+    @Transactional
     @Override
     public void createCarNumberLotAndRegister(CarNumberLotCreateAndRegisterRequest request) {
         User user = userService.createUserFromCarNumberLotRequest(request);
@@ -71,6 +73,7 @@ public class CarNumberLotServiceImpl implements CarNumberLotService {
                 .and(CarNumberLotSpecification.hasRegion(regionId))
                 .and(CarNumberLotSpecification.orderByCreatedDate(sort))
                 .and(CarNumberLotSpecification.isDeleted(false))
+                .and(CarNumberLotSpecification.isConfirm(true))
                 .and(CarNumberLotSpecification.isSold(false));
 
         List<CarNumberLot> carNumberLots = carNumberLotRepository.findAll(spec);
@@ -134,10 +137,39 @@ public class CarNumberLotServiceImpl implements CarNumberLotService {
 
     @Override
     public CarNumberLotAdminDto updateCarNumberLotAdmin(Long lotId, CarNumberLotUpdateAdminRequest request) {
-//        CarNumberLot existingLot = findById(lotId);
-//
-//        carNumberLotRepository.save(existingLot);
-        return null;
+        CarNumberLot existingLot = findById(lotId);
+
+        existingLot.setRegion(regionService.getRegionById(request.getRegionId()));
+        existingLot.setComment(request.getComment());
+        existingLot.setFirstLetter(request.getFirstLetter());
+        existingLot.setSecondLetter(request.getSecondLetter());
+        existingLot.setThirdLetter(request.getThirdLetter());
+        existingLot.setFirstDigit(request.getFirstDigit());
+        existingLot.setSecondDigit(request.getSecondDigit());
+        existingLot.setThirdDigit(request.getThirdDigit());
+        carNumberLotRepository.save(existingLot);
+
+        return carNumberLotMapper.toAdminDto(existingLot);
+    }
+
+    @Override
+    public void deleteCarNumberLot(Long id) {
+        User currentUser = userService.findByEmail(AuthUtils.getCurrentUserEmail());
+        CarNumberLot existingLot = findById(id);
+
+        if (!currentUser.getIsAdmin() || currentUser != existingLot.getAuthor()) {
+            throw new IllegalArgumentException("Только администратор может удалить номерной знак с ID: " + id);
+        }
+        existingLot.setIsDeleted(true);
+        carNumberLotRepository.save(existingLot);
+    }
+
+    @Override
+    public CarNumberLotAdminDto confirmCarNumberLot(Long lotId) {
+        CarNumberLot existingLot = findById(lotId);
+        existingLot.setIsConfirm(true);
+        carNumberLotRepository.save(existingLot);
+        return carNumberLotMapper.toAdminDto(existingLot);
     }
 
     private CarNumberLot findById(Long id) {
@@ -176,6 +208,7 @@ public class CarNumberLotServiceImpl implements CarNumberLotService {
                 .region(region)
                 .isSold(false)
                 .isDeleted(false)
+                .isConfirm(false)
                 .thirdDigit(request.getThirdDigit())
                 .updatedDate(Instant.now())
                 .secondLetter(request.getSecondLetter())

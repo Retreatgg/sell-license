@@ -29,6 +29,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/posts/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/posts/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/posts").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/car-number-lots").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.PUT, "/api/car-number-lots/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/**").permitAll()
@@ -45,7 +47,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(
                 List.of(
-                        "http://192.168.8.100:3000/", "http://localhost:5173", "http://172.20.10.2:5173"
+                       "http://127.0.0.1:5500/", "http://localhost:5173", "http://172.20.10.2:5173"
                 )
         );
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));

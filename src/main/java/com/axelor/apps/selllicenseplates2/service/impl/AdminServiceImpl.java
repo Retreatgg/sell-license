@@ -38,4 +38,14 @@ public class AdminServiceImpl implements AdminService {
     public CarNumberLotAdminDto updateCarNumberLot(Long lotId, CarNumberLotUpdateAdminRequest request) {
         return carNumberLotService.updateCarNumberLotAdmin(lotId, request);
     }
+
+    @Override
+    public CarNumberLotAdminDto confirmCarNumberLot(Long lotId) {
+        return carNumberLotService.confirmCarNumberLot(lotId);
+    }
+
+    @Override
+    public void deleteCarNumberLot(Long lotId) {
+        carNumberLotService.deleteCarNumberLot(lotId);
+    }
 }

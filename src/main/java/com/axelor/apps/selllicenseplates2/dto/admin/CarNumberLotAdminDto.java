@@ -30,6 +30,7 @@ public class CarNumberLotAdminDto {
     private Instant createdDate;
     private Instant updatedDate;
     private String comment;
+    private Boolean isConfirm;
 
     private UserAdminDto author;
 }

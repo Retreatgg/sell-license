@@ -22,7 +22,7 @@ public class Feedback {
     @Column(name = "phone_number", nullable = false, length = 20)
     private String phoneNumber;
 
-    @Column(name = "car_number", length = 20)
+    @Column(name = "car_number", length = 300)
     private String carNumber;
 
     @Column(name = "feedback_type", length = 50)

@@ -53,10 +53,16 @@ public class CarNumberLotController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CarNumberLotDto> updateCarNumberLot(
-            @PathVariable Long id,
+            @PathVariable(name = "id") Long id,
             @RequestBody CarNumberLotUpdateRequest request,
             @AuthenticationPrincipal User user) {
         CarNumberLotDto updatedCarNumberLot = carNumberLotService.updateCarNumberLot(id, request, user);
         return ResponseEntity.ok(updatedCarNumberLot);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCarNumberLot(@PathVariable(name = "id") Long id) {
+        carNumberLotService.deleteCarNumberLot(id);
+        return ResponseEntity.noContent().build();
     }
 }

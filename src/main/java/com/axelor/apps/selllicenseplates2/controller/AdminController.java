@@ -43,4 +43,23 @@ public class AdminController {
         return ResponseEntity.ok(updatedLot);
     }
 
+    @PatchMapping("/car-number-lots/{lotId}/cofirm")
+    public ResponseEntity<CarNumberLotAdminDto> confirmCarNumberLot(@PathVariable(name = "lotId") Long lotId) {
+        CarNumberLotAdminDto confirmedLot = adminService.confirmCarNumberLot(lotId);
+        return ResponseEntity.ok(confirmedLot);
+    }
+
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/car-number-lots/{lotId}")
+    public ResponseEntity<Void> deleteCarNumberLot(@PathVariable Long lotId) {
+        adminService.deleteCarNumberLot(lotId);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

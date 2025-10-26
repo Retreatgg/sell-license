@@ -75,4 +75,8 @@ public class CarNumberLot {
     @Column(name = "comment")
     private String comment;
 
+    @ColumnDefault("false")
+    @Column(name = "is_confirm")
+    private Boolean isConfirm;
+
 }

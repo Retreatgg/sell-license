@@ -15,12 +15,8 @@ public class CarNumberLotUpdateAdminRequest {
 
     private Long regionId;
 
-    private BigDecimal originalPrice;
     private BigDecimal markupPrice;
 
-    private String phoneNumber;
-    private String fullName;
     private String comment;
 
-    private Long authorId;
 }

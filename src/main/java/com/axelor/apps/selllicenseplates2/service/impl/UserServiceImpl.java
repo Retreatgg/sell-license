@@ -7,6 +7,7 @@ import com.axelor.apps.selllicenseplates2.dto.UserRegisterRequest;
 import com.axelor.apps.selllicenseplates2.dto.admin.UserAdminDto;
 import com.axelor.apps.selllicenseplates2.dto.admin.UserAdminUpdateDto;
 import com.axelor.apps.selllicenseplates2.mapper.UserMapper;
+import com.axelor.apps.selllicenseplates2.model.CarNumberLot;
 import com.axelor.apps.selllicenseplates2.model.User;
 import com.axelor.apps.selllicenseplates2.repository.UserRepository;
 import com.axelor.apps.selllicenseplates2.service.RoleService;
@@ -101,6 +102,13 @@ public class UserServiceImpl implements UserService {
         }
 
         return userMapper.toDto(user);
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь с ID: " + userId + " не найден"));
+        userRepository.delete(user);
     }
 
     private boolean isEmailExists(String email) {

@@ -103,4 +103,11 @@ public class CarNumberLotSpecification {
             return orderByCreatedDateDesc();
         }
     }
+
+    public static Specification<CarNumberLot> isConfirm(Boolean isConfirm) {
+        return (r, q, cb) -> {
+            if (isConfirm == null) return cb.conjunction();
+            return cb.equal(r.get("isConfirm"), isConfirm);
+        };
+    }
 }

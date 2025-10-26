@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-change-limit-car-number-feedback-table
+      author: argen
+      changes:
+        - modifyDataType:
+            tableName: feedback
+            columnName: car_number
+            newDataType: varchar(300)
