@@ -1,13 +1,12 @@
 package com.axelor.apps.selllicenseplates2.service.impl;
 
-import com.axelor.apps.selllicenseplates2.dto.CarNumberLotCreateAndRegisterRequest;
-import com.axelor.apps.selllicenseplates2.dto.UserDto;
-import com.axelor.apps.selllicenseplates2.dto.UserLoginRequest;
-import com.axelor.apps.selllicenseplates2.dto.UserRegisterRequest;
+import com.axelor.apps.selllicenseplates2.dto.*;
 import com.axelor.apps.selllicenseplates2.dto.admin.UserAdminDto;
 import com.axelor.apps.selllicenseplates2.dto.admin.UserAdminUpdateDto;
+import com.axelor.apps.selllicenseplates2.mapper.RoleMapper;
 import com.axelor.apps.selllicenseplates2.mapper.UserMapper;
 import com.axelor.apps.selllicenseplates2.model.CarNumberLot;
+import com.axelor.apps.selllicenseplates2.model.Role;
 import com.axelor.apps.selllicenseplates2.model.User;
 import com.axelor.apps.selllicenseplates2.repository.UserRepository;
 import com.axelor.apps.selllicenseplates2.service.RoleService;
@@ -27,6 +26,7 @@ public class UserServiceImpl implements UserService {
     private final RoleService roleService;
     private final PasswordEncoder encoder;
     private final UserMapper userMapper;
+    private final RoleMapper roleMapper;
 
     @Value("${app.defaultPhoneNumber}")
     private String DEFAULT_CHANGED_NUMBER;
@@ -101,7 +101,11 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Неверный пароль");
         }
 
-        return userMapper.toDto(user);
+        UserDto userDto = userMapper.toDto(user);
+        com.axelor.apps.selllicenseplates2.model.Role role = roleService.getRoleForUser();
+        RoleDto roleDto = roleMapper.toDto(role);
+        userDto.setRoleDto(roleDto);
+        return userDto;
     }
 
     @Override

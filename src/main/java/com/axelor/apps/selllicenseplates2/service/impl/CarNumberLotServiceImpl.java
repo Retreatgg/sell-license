@@ -89,14 +89,22 @@ public class CarNumberLotServiceImpl implements CarNumberLotService {
     @Override
     public List<CarNumberLotDto> getMyCarNumberLots() {
         String currentUserEmail = AuthUtils.getCurrentUserEmail();
-        List<CarNumberLot> carNumberLots = carNumberLotRepository.findByAuthor_Email(currentUserEmail);
+
+        Specification<CarNumberLot> specification = CarNumberLotSpecification
+                .isDeleted(false)
+                .and(CarNumberLotSpecification.byAuthorEmail(currentUserEmail));
+
+        List<CarNumberLot> carNumberLots = carNumberLotRepository.findAll(specification);
         return carNumberLotMapper.toListDto(carNumberLots);
     }
 
     @Override
-    public CarNumberLotDto updateCarNumberLot(Long id, CarNumberLotUpdateRequest request, User user) {
+    public CarNumberLotDto updateCarNumberLot(Long id, CarNumberLotUpdateRequest request) {
         CarNumberLot existingLot = findById(id);
         Region region = regionService.getRegionById(request.getRegionId());
+
+        String currentUserEmail = AuthUtils.getCurrentUserEmail();
+        User user = userService.findByEmail(currentUserEmail);
 
         if(!user.equals(existingLot.getAuthor()) && !user.getIsAdmin()) {
             throw new IllegalArgumentException("Пользователь не является автором номерного знака с ID: " + id);
@@ -109,6 +117,7 @@ public class CarNumberLotServiceImpl implements CarNumberLotService {
             existingLot.setFirstLetter(request.getFirstLetter());
             existingLot.setSecondLetter(request.getSecondLetter());
             existingLot.setThirdLetter(request.getThirdLetter());
+            existingLot.setIsConfirm(false);
 
             String fullNumber = request.getFirstLetter()
                     + request.getFirstDigit()
@@ -157,7 +166,7 @@ public class CarNumberLotServiceImpl implements CarNumberLotService {
         User currentUser = userService.findByEmail(AuthUtils.getCurrentUserEmail());
         CarNumberLot existingLot = findById(id);
 
-        if (!currentUser.getIsAdmin() || currentUser != existingLot.getAuthor()) {
+        if (!currentUser.getIsAdmin() && currentUser != existingLot.getAuthor()) {
             throw new IllegalArgumentException("Только администратор может удалить номерной знак с ID: " + id);
         }
         existingLot.setIsDeleted(true);

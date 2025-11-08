@@ -27,7 +27,7 @@ public class AdminController {
     }
 
     @PatchMapping("/users/{userId}")
-    public ResponseEntity<UserAdminDto> updateUser(@PathVariable Long userId, @RequestBody UserAdminUpdateDto userAdminUpdateDto) {
+    public ResponseEntity<UserAdminDto> updateUser(@PathVariable(name = "userId") Long userId, @RequestBody UserAdminUpdateDto userAdminUpdateDto) {
         return ResponseEntity.ok(adminService.updateUser(userId, userAdminUpdateDto));
     }
 
@@ -38,7 +38,7 @@ public class AdminController {
     }
 
     @PutMapping("/car-number-lots/{lotId}")
-    public ResponseEntity<CarNumberLotAdminDto> updateCarNumberLot(@PathVariable Long lotId, @RequestBody CarNumberLotUpdateAdminRequest request) {
+    public ResponseEntity<CarNumberLotAdminDto> updateCarNumberLot(@PathVariable(name = "lotId") Long lotId, @RequestBody CarNumberLotUpdateAdminRequest request) {
         CarNumberLotAdminDto updatedLot = adminService.updateCarNumberLot(lotId, request);
         return ResponseEntity.ok(updatedLot);
     }
@@ -50,13 +50,13 @@ public class AdminController {
     }
 
     @DeleteMapping("/users/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+    public ResponseEntity<Void> deleteUser(@PathVariable(name = "userId") Long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/car-number-lots/{lotId}")
-    public ResponseEntity<Void> deleteCarNumberLot(@PathVariable Long lotId) {
+    public ResponseEntity<Void> deleteCarNumberLot(@PathVariable(name = "lotId") Long lotId) {
         adminService.deleteCarNumberLot(lotId);
         return ResponseEntity.noContent().build();
     }

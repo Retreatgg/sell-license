@@ -4,11 +4,11 @@ import com.axelor.apps.selllicenseplates2.dto.CarNumberLotCreateAndRegisterReque
 import com.axelor.apps.selllicenseplates2.dto.CarNumberLotCreateRequest;
 import com.axelor.apps.selllicenseplates2.dto.CarNumberLotDto;
 import com.axelor.apps.selllicenseplates2.dto.CarNumberLotUpdateRequest;
-import com.axelor.apps.selllicenseplates2.model.User;
 import com.axelor.apps.selllicenseplates2.service.CarNumberLotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,9 +54,8 @@ public class CarNumberLotController {
     @PutMapping("/{id}")
     public ResponseEntity<CarNumberLotDto> updateCarNumberLot(
             @PathVariable(name = "id") Long id,
-            @RequestBody CarNumberLotUpdateRequest request,
-            @AuthenticationPrincipal User user) {
-        CarNumberLotDto updatedCarNumberLot = carNumberLotService.updateCarNumberLot(id, request, user);
+            @RequestBody CarNumberLotUpdateRequest request) {
+        CarNumberLotDto updatedCarNumberLot = carNumberLotService.updateCarNumberLot(id, request);
         return ResponseEntity.ok(updatedCarNumberLot);
     }
 

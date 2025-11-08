@@ -110,4 +110,12 @@ public class CarNumberLotSpecification {
             return cb.equal(r.get("isConfirm"), isConfirm);
         };
     }
+
+    public static Specification<CarNumberLot> byAuthorEmail(String email) {
+        return (r, q, cb) -> {
+            if (email == null) return cb.conjunction();
+            return cb.equal(r.get("author").get("email"), email);
+        };
+
+    }
 }

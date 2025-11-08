@@ -16,7 +16,7 @@ public interface CarNumberLotService {
     List<CarNumberLotDto> getCarNumberLots(Long regionId, Boolean identicalNumbers, Boolean identicalLetters, String sort);
     CarNumberLotDto getCarNumberLotById(Long id);
     List<CarNumberLotDto> getMyCarNumberLots();
-    CarNumberLotDto updateCarNumberLot(Long id, CarNumberLotUpdateRequest request, User user);
+    CarNumberLotDto updateCarNumberLot(Long id, CarNumberLotUpdateRequest request);
     List<CarNumberLotAdminDto> getCarNumberLotsAdminData();
     CarNumberLotAdminDto updateCarNumberLotAdmin(Long lotId, CarNumberLotUpdateAdminRequest request);
     void deleteCarNumberLot(Long id);

@@ -11,5 +11,4 @@ import java.util.List;
 @Repository
 public interface CarNumberLotRepository extends JpaRepository<CarNumberLot, Long>, JpaSpecificationExecutor<CarNumberLot> {
     Collection<CarNumberLot> findByFullCarNumberAndRegionId(String fullCarNumber, Long regionId);
-    List<CarNumberLot> findByAuthor_Email(String authorEmail);
 }
