@@ -140,7 +140,8 @@ public class CarNumberLotServiceImpl implements CarNumberLotService {
 
     @Override
     public List<CarNumberLotAdminDto> getCarNumberLotsAdminData() {
-        List<CarNumberLot> carNumberLots = carNumberLotRepository.findAll();
+        Specification<CarNumberLot> specification = CarNumberLotSpecification.isDeleted(false);
+        List<CarNumberLot> carNumberLots = carNumberLotRepository.findAll(specification);
         return carNumberLotMapper.toAdminDtoList(carNumberLots);
     }
 

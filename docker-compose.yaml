@@ -13,6 +13,8 @@ services:
       SERVER_PORT: 8081
     depends_on:
       - db
+    volumes:
+      - ./data:/app/data
     networks:
       - app-network
 
