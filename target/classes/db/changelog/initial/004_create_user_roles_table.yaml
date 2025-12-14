@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: create table roles
+      author: Argen
+      changes:
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: role
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: Add column 'role_id' to 'users' table
+      author: argenashimov (generated)
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: role_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user_role_id
+                    references: roles(id)

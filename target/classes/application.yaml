@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:1234/sell_licences_db?stringtype=unspecified
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    change-log: classpath:/db/changelog/master.yaml
+
+  mail:
+    host: smtp.gmail.com
+    username: devargenpm@gmail.com
+    password: vcfs pusq zeeo ncuq
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: trued
+          starttls.enable: true
+
+server:
+  port: 8081
+  address: 0.0.0.0
+
+app:
+  defaultPhoneNumber: +996550150176
+  markup:
+    percent: 20

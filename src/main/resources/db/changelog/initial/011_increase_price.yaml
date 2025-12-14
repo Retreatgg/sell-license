@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: increase_price_precision_to_19_2
+      author: Argen
+      changes:
+        - modifyDataType:
+            tableName: car_number_lots
+            columnName: original_price
+            newDataType: decimal(19,2)
+        - modifyDataType:
+            tableName: car_number_lots
+            columnName: markup_price
+            newDataType: decimal(19,2)

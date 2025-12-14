@@ -59,10 +59,10 @@ public class CarNumberLot {
     @Column(name = "is_deleted")
     private Boolean isDeleted;
 
-    @Column(name = "original_price", nullable = false, precision = 10, scale = 2)
+    @Column(name = "original_price", nullable = false, precision = 19, scale = 2)
     private BigDecimal originalPrice;
 
-    @Column(name = "markup_price", nullable = false, precision = 10, scale = 2)
+    @Column(name = "markup_price", nullable = false, precision = 19, scale = 2)
     private BigDecimal markupPrice;
 
     @Column(name = "phone_number", length = 20)
