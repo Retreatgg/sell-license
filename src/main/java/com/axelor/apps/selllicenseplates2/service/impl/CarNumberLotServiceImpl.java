@@ -6,6 +6,7 @@ import com.axelor.apps.selllicenseplates2.dto.CarNumberLotCreateRequest;
 import com.axelor.apps.selllicenseplates2.dto.CarNumberLotUpdateRequest;
 import com.axelor.apps.selllicenseplates2.dto.admin.CarNumberLotAdminDto;
 import com.axelor.apps.selllicenseplates2.dto.admin.CarNumberLotUpdateAdminRequest;
+import com.axelor.apps.selllicenseplates2.enums.CarNumberCategory;
 import com.axelor.apps.selllicenseplates2.exception.CarNumberLotNotFoundException;
 import com.axelor.apps.selllicenseplates2.mapper.CarNumberLotMapper;
 import com.axelor.apps.selllicenseplates2.model.CarNumberLot;
@@ -66,9 +67,10 @@ public class CarNumberLotServiceImpl implements CarNumberLotService {
     }
 
     @Override
-    public List<CarNumberLotDto> getCarNumberLots(Long regionId, Boolean identicalNumbers, Boolean identicalLetters, String sort) {
+    public List<CarNumberLotDto> getCarNumberLots(Long regionId, Boolean identicalNumbers, Boolean identicalLetters, String sort, CarNumberCategory category) {
         Specification<CarNumberLot> spec = CarNumberLotSpecification
                 .hasIdenticalLetters(identicalNumbers)
+                .and(CarNumberLotSpecification.hasCategory(category))
                 .and(CarNumberLotSpecification.hasIdenticalNumbers(identicalLetters))
                 .and(CarNumberLotSpecification.hasRegion(regionId))
                 .and(CarNumberLotSpecification.orderByCreatedDate(sort))
@@ -118,17 +120,6 @@ public class CarNumberLotServiceImpl implements CarNumberLotService {
             existingLot.setSecondLetter(request.getSecondLetter());
             existingLot.setThirdLetter(request.getThirdLetter());
             existingLot.setIsConfirm(false);
-
-            String fullNumber = request.getFirstLetter()
-                    + request.getFirstDigit()
-                    + request.getSecondDigit()
-                    + request.getThirdDigit()
-                    + request.getSecondLetter()
-                    + request.getThirdLetter();
-
-            if (!isNumberUnique(fullNumber, request.getRegionId())) {
-                throw new IllegalArgumentException("Номерной знак: " + fullNumber + " в регионе: " + region.getRegionCode() + " уже существует");
-            }
 
             existingLot.setRegion(region);
 
@@ -197,11 +188,6 @@ public class CarNumberLotServiceImpl implements CarNumberLotService {
 
         Region region = regionService.getRegionById(request.getRegionId());
 
-        if (!isNumberUnique(fullNumber, region.getId())) {
-            throw new IllegalArgumentException("Номерной знак: " + fullNumber + " в регионе: "
-                    + region.getRegionCode() + " уже существует");
-        }
-
         BigDecimal markupPrice = request.getPrice() == null ? BigDecimal.ZERO :
                 request.getPrice().multiply(BigDecimal.valueOf(percentMarkup)).divide(BigDecimal.valueOf(100));
 
@@ -226,10 +212,6 @@ public class CarNumberLotServiceImpl implements CarNumberLotService {
                 .fullCarNumber(fullNumber)
                 .markupPrice(finalPrice)
                 .build();
-    }
-
-    private boolean isNumberUnique(String fullCarNumber, Long regionId) {
-        return carNumberLotRepository.findByFullCarNumberAndRegionId(fullCarNumber, regionId).isEmpty();
     }
 
 }

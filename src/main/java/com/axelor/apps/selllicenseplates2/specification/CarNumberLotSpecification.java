@@ -1,7 +1,10 @@
 package com.axelor.apps.selllicenseplates2.specification;
 
+import com.axelor.apps.selllicenseplates2.enums.CarNumberCategory;
 import com.axelor.apps.selllicenseplates2.model.CarNumberLot;
 import org.springframework.data.jpa.domain.Specification;
+
+import static com.axelor.apps.selllicenseplates2.enums.CarNumberCategory.IDENTICAL_NUMBERS;
 
 public class CarNumberLotSpecification {
 
@@ -117,5 +120,45 @@ public class CarNumberLotSpecification {
             return cb.equal(r.get("author").get("email"), email);
         };
 
+    }
+
+    public static Specification<CarNumberLot> hasCategory(CarNumberCategory category) {
+        return (root, query, cb) -> {
+            if (category == null) {
+                return cb.conjunction();
+            }
+
+            switch (category) {
+                case IDENTICAL_NUMBERS:
+                    return cb.and(
+                            cb.equal(cb.substring(root.get("number"), 1, 1), cb.substring(root.get("number"), 2, 1)),
+                            cb.equal(cb.substring(root.get("number"), 2, 1), cb.substring(root.get("number"), 3, 1))
+                    );
+
+                case IDENTICAL_LETTERS:
+                    return cb.and(
+                            cb.equal(cb.substring(root.get("series"), 1, 1), cb.substring(root.get("series"), 2, 1)),
+                            cb.equal(cb.substring(root.get("series"), 2, 1), cb.substring(root.get("series"), 3, 1))
+                    );
+
+                case FIRST_TEN:
+                    return cb.between(root.get("number"), "001", "010");
+
+                case ROUND:
+                    return cb.and(
+                            cb.like(root.get("number"), "%00"),
+                            cb.notEqual(root.get("number"), "000")
+                    );
+
+                case MIRROR:
+                    return cb.and(
+                            cb.equal(cb.substring(root.get("number"), 1, 1), cb.substring(root.get("number"), 3, 1)),
+                            cb.notEqual(cb.substring(root.get("number"), 1, 1), cb.substring(root.get("number"), 2, 1))
+                    );
+
+                default:
+                    return cb.conjunction();
+            }
+        };
     }
 }

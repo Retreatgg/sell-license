@@ -4,6 +4,7 @@ import com.axelor.apps.selllicenseplates2.dto.CarNumberLotCreateAndRegisterReque
 import com.axelor.apps.selllicenseplates2.dto.CarNumberLotCreateRequest;
 import com.axelor.apps.selllicenseplates2.dto.CarNumberLotDto;
 import com.axelor.apps.selllicenseplates2.dto.CarNumberLotUpdateRequest;
+import com.axelor.apps.selllicenseplates2.enums.CarNumberCategory;
 import com.axelor.apps.selllicenseplates2.service.CarNumberLotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -35,9 +36,10 @@ public class CarNumberLotController {
             @RequestParam(required = false, defaultValue = "0", name = "regionId") Long regionId,
             @RequestParam(required = false, defaultValue = "false", name = "identicalNumber") Boolean identicalNumbers,
             @RequestParam(required = false, defaultValue = "false",  name = "identicalLetters") Boolean identicalLetters,
+            @RequestParam(required = false, name = "category") CarNumberCategory category,
             @RequestParam(required = false, defaultValue = "date_desc", name = "sortByDate") String sort
     ) {
-        return ResponseEntity.ok(carNumberLotService.getCarNumberLots(regionId, identicalNumbers, identicalLetters, sort));
+        return ResponseEntity.ok(carNumberLotService.getCarNumberLots(regionId, identicalNumbers, identicalLetters, sort, category));
     }
 
     @GetMapping("/{id}")
